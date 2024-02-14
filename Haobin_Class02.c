@@ -11,9 +11,9 @@ struct Arr {
 };
 
 void init_arr(struct Arr* pArr, int len);
-bool append_arr(struct Arr* pArr);	//追加
-bool insert_arr();
-bool delete_arr();
+bool append_arr(struct Arr* pArr, int val);	//追加
+bool insert_arr(struct Arr* pArr, int pos, int val);	//pos值从1开始
+bool delete_arr(struct Arr* pArr, int pos, int* pVal);
 int get();
 bool is_empty(struct Arr* pArr);
 bool is_full(struct Arr* pArr);
@@ -23,8 +23,28 @@ void inversion_arr();		//倒置
 
 int main(void) {
 	struct Arr arr;
+	int val;
 
 	init_arr(&arr, 6);
+	show_arr(&arr);
+	append_arr(&arr, 1);
+	append_arr(&arr, 2);
+	append_arr(&arr, 3);
+	append_arr(&arr, 4);
+	if (delete_arr(&arr, 1, &val)) {
+		printf("删除成功！\n");
+		printf("您删除的元素是：%d\n", val);
+	}
+
+	//append_arr(&arr, 2);
+	//append_arr(&arr, 3);
+	//append_arr(&arr, 4);
+	//append_arr(&arr, 5);
+	//insert_arr(&arr, 7, 99);
+
+	//append_arr(&arr, 6);
+	//if (append_arr(&arr, 7))
+	//	printf("追加失败！\n");
 	show_arr(&arr);
 	//printf("%d\n", arr.len);
 
@@ -68,6 +88,48 @@ void show_arr(struct Arr* pArr) {
 	}
 }
 
-bool append_arr(struct Arr* pArr) {
+bool append_arr(struct Arr* pArr, int val) {
+	if (is_full(pArr))
+		return false;
 
+	pArr->pBase[pArr->cnt++] = val;
+
+	return true;
+}
+
+bool insert_arr(struct Arr* pArr, int pos, int val) {
+	if (is_full(pArr)) {
+		printf("插入失败，数组已满！\n");
+		return false;
+	}
+	if (pos - 1 < 0 || pos > pArr->cnt + 1) {
+		printf("插入失败，插入位置无效！\n");
+		return false;
+	}
+
+	for (int i = pArr->cnt - 1; i > pos - 2; i--) {
+		pArr->pBase[i + 1] = pArr->pBase[i];
+	}
+	pArr->pBase[pos - 1] = val;
+	pArr->cnt++;
+
+	return true;
+}
+
+bool delete_arr(struct Arr* pArr, int pos, int* pVal) {
+	if (is_empty(pArr)) {
+		printf("数组为空！");
+		return false;
+	}
+	if (pos - 1 < 0 || pos > pArr->cnt + 1) {
+		printf("无效位置！");
+		return false;
+	}
+
+	*pVal = pArr->pBase[pos - 1];
+	for (int i = pos; i <= pArr->cnt; i++)
+		pArr->pBase[i - 1] = pArr->pBase[i];
+	pArr->cnt--;
+
+	return true;
 }
