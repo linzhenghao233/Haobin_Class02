@@ -17,9 +17,9 @@ bool delete_arr(struct Arr* pArr, int pos, int* pVal);
 int get();
 bool is_empty(struct Arr* pArr);
 bool is_full(struct Arr* pArr);
-void sort_arr();
+void sort_arr(struct Arr* pArr);
 void show_arr(struct Arr* pArr);
-void inversion_arr();		//倒置
+void inversion_arr(struct Arr* pArr);		//倒置
 
 int main(void) {
 	struct Arr arr;
@@ -31,7 +31,7 @@ int main(void) {
 	append_arr(&arr, 2);
 	append_arr(&arr, 3);
 	append_arr(&arr, 4);
-	if (delete_arr(&arr, 1, &val)) {
+	if (delete_arr(&arr, 5, &val)) {
 		printf("删除成功！\n");
 		printf("您删除的元素是：%d\n", val);
 	}
@@ -45,7 +45,13 @@ int main(void) {
 	//append_arr(&arr, 6);
 	//if (append_arr(&arr, 7))
 	//	printf("追加失败！\n");
+
 	show_arr(&arr);
+	inversion_arr(&arr);
+	show_arr(&arr);
+	sort_arr(&arr);
+	show_arr(&arr);
+
 	//printf("%d\n", arr.len);
 
 	return 0;
@@ -118,11 +124,11 @@ bool insert_arr(struct Arr* pArr, int pos, int val) {
 
 bool delete_arr(struct Arr* pArr, int pos, int* pVal) {
 	if (is_empty(pArr)) {
-		printf("数组为空！");
+		printf("数组为空！\n");
 		return false;
 	}
-	if (pos - 1 < 0 || pos > pArr->cnt + 1) {
-		printf("无效位置！");
+	if (pos - 1 < 0 || pos > pArr->cnt) {
+		printf("无效位置！\n");
 		return false;
 	}
 
@@ -132,4 +138,30 @@ bool delete_arr(struct Arr* pArr, int pos, int* pVal) {
 	pArr->cnt--;
 
 	return true;
+}
+
+void inversion_arr(struct Arr* pArr) {
+	int i = 0;
+	int j = pArr->cnt - 1;
+	int temp;
+
+	while (i < j) {
+		temp = pArr->pBase[i];
+		pArr->pBase[i] = pArr->pBase[j];
+		pArr->pBase[j] = temp;
+		i++;
+		j--;
+	}
+}
+
+void sort_arr(struct Arr* pArr) {
+	for (int i = 0; i < pArr->cnt; i++) {
+		for (int j = i + 1; j < pArr->cnt; j++) {
+			if (pArr->pBase[i] > pArr->pBase[j]) {
+				int temp = pArr->pBase[i];
+				pArr->pBase[i] = pArr->pBase[j];
+				pArr->pBase[j] = temp;
+			}
+		}
+	}
 }
